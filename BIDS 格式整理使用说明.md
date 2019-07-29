@@ -18,17 +18,17 @@
 
 ## 运行程序
 
-### 1. 程序目录下创建 **anatpath.txt**和**targetpath.txt**，并分别在文本文件中写入路径。
+1. 程序目录下创建 **anatpath.txt**和**targetpath.txt**，并分别在文本文件中写入路径。
 
    > 通常情况下anatpath 和 targetpath不需改变，以此避免重复性输入路径信息。
 
    - anatpath： 结构数据的文件路径。
 
-     >  anatpath 为nas中share文件夹中的BIDS_anat。
+     > anatpath 为nas中share文件夹中的BIDS_anat。
 
    - targetpath: 数据保存路径。
 
-### 2. 运行程序BIDS_v7.0
+2. 运行程序BIDS_v7.0
 
    弹窗如下
 
@@ -48,7 +48,7 @@
 
    ![image](https://user-images.githubusercontent.com/22385389/62018831-f5761480-b1ee-11e9-96de-ab4b63d48dd5.png)
 
-  ### 3. 对实验数据进行第一次整理时（targetpath 目录下未包含*data_description.json*文件）
+   3. 对实验数据进行第一次整理时（targetpath 目录下未包含*data_description.json*文件）
 
       弹出json文件编辑器，如下图所示。
 
@@ -65,8 +65,8 @@
      选中所要删除行，双击右键即可删除
 
    编辑完成后点击*Done*即可
-   
-###  4. 文件分类
+
+   4. 文件分类
 
       ![image](https://user-images.githubusercontent.com/22385389/62019832-36702800-b1f3-11e9-831a-d7549e3c9e86.png)
 
@@ -102,7 +102,7 @@
 
       所有信息设置完成后，点击*OK*，如无报错则程序开始复制文件，如有报错请根据提示进行修改。
 
- ### 5. 填写ieeg.json
+      5. 填写ieeg.json
 
       文件复制完成后，窗口自动关闭。并弹出json 编辑窗口
 
