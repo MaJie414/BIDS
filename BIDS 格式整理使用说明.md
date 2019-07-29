@@ -48,7 +48,7 @@
 
    ![image](https://user-images.githubusercontent.com/22385389/62018831-f5761480-b1ee-11e9-96de-ab4b63d48dd5.png)
 
-   3. 对实验数据进行第一次整理时（targetpath 目录下未包含*data_description.json*文件）
+3. 对实验数据进行第一次整理时（targetpath 目录下未包含*data_description.json*文件）
 
       弹出json文件编辑器，如下图所示。
 
@@ -66,7 +66,7 @@
 
    编辑完成后点击*Done*即可
 
-   4. 文件分类
+4. 文件分类
 
       ![image](https://user-images.githubusercontent.com/22385389/62019832-36702800-b1f3-11e9-831a-d7549e3c9e86.png)
 
@@ -102,7 +102,7 @@
 
       所有信息设置完成后，点击*OK*，如无报错则程序开始复制文件，如有报错请根据提示进行修改。
 
-      5. 填写ieeg.json
+5. 填写ieeg.json
 
       文件复制完成后，窗口自动关闭。并弹出json 编辑窗口
 
