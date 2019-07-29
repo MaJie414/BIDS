@@ -2,29 +2,32 @@ import os,sys,re,json,pickle
 from tkinter import *
 from tkinter import ttk,messagebox
 from tkinter.filedialog import askdirectory, askopenfilename
-import shutil
+import shutil,textwrap
 import numpy as np
 
 def on_closing(root):
     root.destroy()
     sys.exit(0)
+def wrap(string, lenght=20):
+    return '\n'.join(textwrap.wrap(string, lenght))
 def write_lack_json(type,**jsonname):
     if not os.path.exists(os.path.join(os.getcwd(),'jsonfiles','temp')):
         os.makedirs(os.path.join(os.getcwd(),'jsonfiles','temp'))
     if ' ' in type:
         anat_type = type.split(' ')[1]
     def save_json():  # get the text from tk.Text widget
-        tar_text = get_data()
-        if 'create' in type:
-            filename = os.path.join(os.getcwd(), 'jsonfiles','temp',f'{subID}_{anat_type}.json')
-        elif type == 'ieeg':
-            filename = jsonname['jsonname']
-        else:
-            filename = os.path.join(targetpath,  'data_description.json')
+        tar_text,miss = get_data()
+        if miss!=1:
+            if 'create' in type:
+                filename = os.path.join(os.getcwd(), 'jsonfiles','temp',f'{subID}_{anat_type}.json')
+            elif type == 'ieeg':
+                filename = jsonname['jsonname']
+            else:
+                filename = os.path.join(targetpath,  'data_description.json')
 
-        with open(filename, 'w') as f:
-            json.dump(tar_text, f, indent=4)
-        root.destroy()
+            with open(filename, 'w') as f:
+                json.dump(tar_text, f, indent=4)
+            root.destroy()
 
     if type == 'data_description' or type =='ieeg':
         with open(os.path.join(os.getcwd(), 'jsonfiles', '{}.json'.format(type)), 'r') as f:
@@ -65,9 +68,11 @@ def write_lack_json(type,**jsonname):
             treeview.set(item, column=column, value=entryedit.get(0.0, "end"))
             win.destroy()
         column = treeview.identify_column(event.x)  # 列
+        col1 = int(column[1::])-1
         win = Tk()
         win.title('编辑框')
         entryedit = Text(win)
+        entryedit.insert(INSERT,item_text[col1])
         entryedit.grid(row=0,column=0)
         okb = Button(win, text='OK', width=4, command=saveedit)
         okb.grid(row=1,column=0)
@@ -77,10 +82,15 @@ def write_lack_json(type,**jsonname):
         treeview.update()
     def get_data():
         tar_text = {}
+        miss=0
         for line in treeview.get_children():
             values = treeview.item(line)['values']
             tar_text[values[0]] = values[1]
-        return tar_text
+            if values[0] in ["Instructions","Marker Meaning","Experiment information"]:
+                if len(values[1])<=20:
+                    messagebox.showwarning('Warning',f'请尽可能详细的描述{values[0]}')
+                    miss = 1
+        return tar_text,miss
     treeview.bind('<Double-1>', set_cell_value)
     treeview.bind('<Double-3>', del_cell_value)
     newb = ttk.Button(root, text='add info', width=20, command=newrow)
@@ -180,17 +190,22 @@ class get_path_info():
         self.paths[1].set(anatpath)
         self.paths[3].set(targetpath)
         Label(self.root, text='anat path').grid(row=0, column=0)
-        entry = Entry(self.root, textvariable=self.paths[1]).grid(row=0, column=1,sticky='ew')
-        Button(self.root, text='path', command=lambda :self.files(1)).grid(row=0, column=2)
+        entry = Entry(self.root, textvariable=self.paths[1]).grid(row=0, column=1,sticky='ew',columnspan=2)
+        Button(self.root, text='path', command=lambda :self.files(1)).grid(row=0, column=3)
         Label(self.root, text='files path').grid(row=1, column=0)
-        entry = Entry(self.root, textvariable=self.paths[2]).grid(row=1, column=1,sticky='ew')
-        Button(self.root, text='path', command=lambda :self.files(2)).grid(row=1, column=2)
+        entry = Entry(self.root, textvariable=self.paths[2]).grid(row=1, column=1,sticky='ew',columnspan=2)
+        Button(self.root, text='path', command=lambda :self.files(2)).grid(row=1, column=3)
         Label(self.root, text='target path').grid(row=2, column=0)
-        entry = Entry(self.root, textvariable=self.paths[3]).grid(row=2, column=1,sticky='ew')
-        Button(self.root, text='path', command=lambda :self.files(3)).grid(row=2, column=2)
+        entry = Entry(self.root, textvariable=self.paths[3]).grid(row=2, column=1,sticky='ew',columnspan=2)
+        Button(self.root, text='path', command=lambda :self.files(3)).grid(row=2, column=3)
         Label(self.root, text='Subject ID').grid(row=3, column=0)
-        entry = Entry(self.root, textvariable=self.subID).grid(row=3, column=1,sticky='ew')
-        Button(self.root, text='OK', command= self.confirm_input,width=10).grid(row=4, column=1)
+        entry = Entry(self.root, textvariable=self.subID).grid(row=3, column=1,sticky='ew',columnspan=2)
+        Label(self.root, text='ieeg type').grid(row=4, column=0)
+        self.ieeg_type = StringVar()
+        Radiobutton(self.root, text='CCEP', variable=self.ieeg_type, value= "CCEP").grid(row=4, column=1)
+        Radiobutton(self.root, text='SEEG', variable=self.ieeg_type, value="SEEG" ).grid(row=4, column=2)
+        self.ieeg_type.set('SEEG')
+        Button(self.root, text='OK', command= self.confirm_input,width=10).grid(row=5, column=1)
 
 # path_info contains informations of inputpath,targetpath, subID and filtered files
 
@@ -202,7 +217,7 @@ path_info.window()
 win.protocol("WM_DELETE_WINDOW", lambda :on_closing(win))
 win.mainloop()
 
-anat_path,files_path, targetpath,subID = path_info.paths[1].get(),path_info.paths[2].get(),path_info.paths[3].get(),path_info.subID.get()
+anat_path,files_path, targetpath,subID,ieeg_type = path_info.paths[1].get(),path_info.paths[2].get(),path_info.paths[3].get(),path_info.subID.get(),path_info.ieeg_type.get()
 all_files = path_info.get_files(files_path)
 with open(os.path.join(os.getcwd(),'infos.pkl'),'wb') as f:
     pickle.dump([anat_path,files_path, targetpath,subID,all_files],f)
@@ -210,8 +225,8 @@ with open(os.path.join(os.getcwd(),'infos.pkl'),'wb') as f:
 # with open(os.path.join(os.getcwd(),'infos.pkl'),'rb') as f:
 #     [anat_path,files_path, targetpath,subID,all_files] = pickle.load(f)
 
-while not os.path.exists(os.path.join(targetpath,'data_description.json')):
-    write_lack_json('data_description')
+# while not os.path.exists(os.path.join(targetpath,'data_description.json')):
+# write_lack_json('data_description')
 
 
 
@@ -272,7 +287,7 @@ class define_files():
         taskname = StringVar()
         return [comvalue, anat_type,session, run, taskname]
     def select_json(self, row):
-        d1 =  self.filenames[row][0].get()
+        # d1 =  self.filenames[row][0].get()
         if 'creat' in self.filenames[row][0].get():
             write_lack_json(self.filenames[row][0].get())
     def get_targetfile_info(self, filename, type, session, run, subID, task):  # parametre only accept str type
@@ -432,6 +447,8 @@ class define_files():
                   'behaviour_files':['behaviour file','None'],'info':{'mat':['patient info','Electrode'],'pdf':['Implantation','Fusion','History','MR','else','None']}}
 
         for key,files in all_files.items():
+            if key == 'behaviour_files' and ieeg_type =='CCEP':
+                continue
             value = types[key]
             # -------------------------数据分割线以及列名 -----------------------------------
             sh = ttk.Separator(self.frame_buttons, orient=HORIZONTAL)
@@ -479,7 +496,11 @@ class confirm_and_move_files():
             run_nums.append(i[3].get())
             tasks.append(i[4].get())
         miss = []
-        must_type = ['ieeg-ieeg','behaviour file','patient info','Fusion','Electrode']
+        # CCEP 数据忽略行为数据
+        if ieeg_type=='SEEG':
+            must_type = ['ieeg-ieeg','behaviour file','patient info','Fusion','Electrode']
+        else:
+            must_type = ['ieeg-ieeg', 'patient info', 'Fusion', 'Electrode']
         types = np.asarray(types)
         lack_type = list(set(must_type)-set(types))
         if len(lack_type)>0:
@@ -500,13 +521,14 @@ class confirm_and_move_files():
                 i.append((session_nums[index],run_nums[index]))
             diff = list(set(sess_run) - set(i))
             miss.append(f'ieeg of session{diff[0][0]}_run{diff[0][1]} is missing\n')
-        bahaviour_index = np.where(ieeg_types == 'behaviour file')[0]
-        if len(bahaviour_index) < len(sess_run):
-            i = []
-            for index in ieeg_index:
-                i.append((session_nums[index], run_nums[index]))
-            diff = list(set(sess_run) - set(i))
-            miss.append(f'bahaviour of session{diff[0][0]}_run{diff[0][1]} is missing\n')
+        if ieeg_type == 'SEEG':
+            bahaviour_index = np.where(ieeg_types == 'behaviour file')[0]
+            if len(bahaviour_index) < len(sess_run):
+                i = []
+                for index in ieeg_index:
+                    i.append((session_nums[index], run_nums[index]))
+                diff = list(set(sess_run) - set(i))
+                miss.append(f'bahaviour of session{diff[0][0]}_run{diff[0][1]} is missing\n')
         if len(deri_widgets)!=0:
             for key,value in deri_widgets.items():
                 if value[1].get() == '':
@@ -572,5 +594,5 @@ files_info = define_files(win)
 files_info.rows_data(all_files)
 win.protocol("WM_DELETE_WINDOW", lambda :on_closing(win))
 win.mainloop()
-
-print(f'The data of {subID} has been collated')
+#
+# print(f'The data of {subID} has been collated')
