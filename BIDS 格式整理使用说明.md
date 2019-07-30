@@ -44,6 +44,7 @@
    - 根据实验类型选择*CCEP* 或者 *SEEG*  
    
       选择CCEP的话， 不转存行为数据
+      
       选择SEEG，要求每个session每个run有对应的行为文件（一个session一个run下可以有多个行为结果，通过taskname进行区分）
 
    如果targetpath中包含了该被试ID文件夹，会弹窗提示是否覆盖。如选“是”则删除targetpath中原被试ID的数据，如选“否”则可添加ieeg，其余信息仍会覆写。
