@@ -1,10 +1,13 @@
 {
     "Name": "Miller_et_al_2007_Jneurosci",
-    "BIDSVersion": "1.0.2",
     "License": "This dataset is made available under the Public Domain Dedication and License \\nv1.0, whose full text can be found at \\nhttp://www.opendatacommons.org/licenses/pddl/1.0/. \\nWe hope that all users will follow the ODC Attribution/Share-Alike \\nCommunity Norms (http://www.opendatacommons.org/norms/odc-by-sa/); \\nin particular, while not legally required, we hope that all users \\nof the data have to include the ethics statement (see README) and acknowledge ... in any publications.",
     "Authors": "Ma",
     "Author's mail address": "xx@xx.com",
-    "Acknowledgements": "Biao, Lu, Chen",
-    "Funding": "NSF 0642848"
-
+    "Acknowledgements": "Biao, Lu, Qi",
+    "Funding": "NSF 0642848",
+	"Experiment software": "psychtoolbox3",
+	"Subject number": "",
+	"Sex structure" : "male: ,female: ",
+	"Experiment information":"In this study 28 subjects were scanned with anatomical and fMRI sequences, while they performed three different tasks (main apparent motion masking task, functional localizer, population receptive field localizer). Each participant performed two sessions, including 14 runs of main apparent motion masking task in total, in which they were presented with two aternatively presented gabors in the right-top and right-bottom of the screen while detecting if there is a target presented in the right-middle. For the functional localizer and pRF task, participants were asked to detect the color changing of the fixation point. All task implemented in  Psychotoolbox. The dimcom files from the scanner were automatically streamed to the 'raw' folder. The 'logfile' folder contains behavioral log files. The 'participants' folder contains the exported CastorEDC files with all lab notes. The 'script' folder contains the presentation script (Matlab, Psychotoolbox) for the three task.",
+	"Data information":"sub-001 is pilot, only finished one session.\nsub-010 only participate session one and quit session two\nsub-006 has excessive head movement in several blocks"
 }
