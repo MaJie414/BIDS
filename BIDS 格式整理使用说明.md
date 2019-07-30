@@ -32,7 +32,7 @@
 
    弹窗如下
 
-   ![image](https://user-images.githubusercontent.com/22385389/62018425-3836ed00-b1ed-11e9-859e-e2d967647d72.png)
+   ![image](https://user-images.githubusercontent.com/22385389/62091368-113af280-b2a3-11e9-815d-c37bba2df2f6.png)
 
    因anatpath 和 targetpath已在文本文件中输入，程序自动读取相关信息。（如路径需要修改点击最后一列的*path* 按键）
 
@@ -41,8 +41,9 @@
    - 输入*Subject ID*， 格式要求 g/s_xxxx(拼音)_123456(6位日期)
 
      > ID 会与 anatpath中的被试ID进行匹配，如所输ID未能在anatpath中找到，则程序无法运行。
-
-   
+   - 根据实验类型选择*CCEP* 或者 *SEEG*
+      选择CCEP的话， 不转存行为数据
+      选择SEEG，要求每个session每个run有对应的行为文件（一个session一个run下可以有多个行为结果，通过taskname进行区分）
 
    如果targetpath中包含了该被试ID文件夹，会弹窗提示是否覆盖。如选“是”则删除targetpath中原被试ID的数据，如选“否”则可添加ieeg，其余信息仍会覆写。
 
